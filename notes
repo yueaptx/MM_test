@@ -1,0 +1,154 @@
+###################################################################
+## multiple definition of model::cout error
+
+1. /include/model/MPI/MPIcout.h
+
+* comment out line 92.
+
+2. /include/model/LoopNetwork
+
+* LoopLink.h (line 21), LoopNetwork.h (line 51), LoopNode.h (line 32)
+
+change "model::cout" to "std::cout" 
+
+###################################################################
+## With Mac OS, when compile the MoDELib with MOOSE, the following error shows up:
+
+cxx-stl/llvm-libc++/include/map:820:5: error: static_assert failed "Allocator::value_type must be same type as value_type" static_assert((is_same<typename allocator_type::value_type, value_type>::value),
+
+.cpp:302:26: note: in instantiation of template class 'std::__ndk1::map<void *, (anonymous namespace)::OurMappedRegion, std::__ndk1::less<void *>, OurAllocator<std::__ndk1::pair<const void *, (anonymous namespace)::OurMappedRegion> > >' requested here void* p = malloc(sizeof(*spOurClassMap));
+
+3. /include/model/LoopNetwork/LoopNetwork.h
+
+* line 66:
+
+Change 
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t>, LoopLink<typename ...
+
+To
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t> const, LoopLink<typena ...
+
+* line 82:
+
+Change 
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t>,
+
+To
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t> const,
+
+
+4. /include/model/DislocationDynamics/GlidePlanes/GlidePlaneObserver.h
+
+* line 49:
+
+Change
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t>,PlanePlaneIntersection<dim>>>
+
+To
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t> const,PlanePlaneIntersection<dim>>>
+
+* line 85:
+
+Change
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t>,PlanePlaneIntersectionType>>
+
+To
+
+Eigen::aligned_allocator<std::pair<std::pair<size_t,size_t> const,PlanePlaneIntersectionType>>
+
+4. /include/model/Mesh/SimplicialMesh.h
+
+* line 47:
+
+Change
+
+Eigen::aligned_allocator<std::pair<typename SimplexTraits<_dim,_dim>::SimplexIDType, const Simplex<_dim,_dim>> >
+
+To 
+
+Eigen::aligned_allocator<std::pair<typename SimplexTraits<_dim,_dim>::SimplexIDType const, const Simplex<_dim,_dim>> >
+
+* line 68:
+
+Change
+
+Eigen::aligned_allocator<std::pair<typename SimplexTraits<_dim,_dim>::SimplexIDType, const Simplex<_dim,_dim>> >
+
+To
+
+Eigen::aligned_allocator<std::pair<typename SimplexTraits<_dim,_dim>::SimplexIDType const, const Simplex<_dim,_dim>> >
+
+5. /include/model/DislocationDynamics/DislocationSegment.h
+
+* line 101:
+
+Change
+
+Eigen::aligned_allocator<std::pair<size_t, std::pair<VectorNcoeff,VectorDim>> >
+
+To
+
+Eigen::aligned_allocator<std::pair<size_t const, std::pair<VectorNcoeff,VectorDim>> >
+
+6. /include/model/Geometry/Splines/SplineSegmentBase.h
+
+* line 50:
+
+Eigen::aligned_allocator<std::pair<size_t, std::pair<VectorNcoeff,VectorDim>> >
+
+To
+
+Eigen::aligned_allocator<std::pair<size_t const, std::pair<VectorNcoeff,VectorDim>> >
+
+* line 198:
+
+Eigen::aligned_allocator<std::pair<size_t, std::pair<VectorNcoeff,VectorDim>> >
+
+To
+
+Eigen::aligned_allocator<std::pair<size_t const, std::pair<VectorNcoeff,VectorDim>> >
+
+7. /include/model/DislocationDynamics/BoundingLineSegments.h
+
+* line 382
+
+Change
+
+Eigen::aligned_allocator<std::pair<double,std::pair<VectorDim,size_t>>>> snapMap;
+
+To 
+
+Eigen::aligned_allocator<std::pair<double const,std::pair<VectorDim,size_t>>>> snapMap;
+
+* line 433
+
+Change 
+
+Eigen::aligned_allocator<std::pair<double,VectorDim>>> snapMap;
+
+To
+
+Eigen::aligned_allocator<std::pair<double const,VectorDim>>> snapMap;
+
+
+###################################################################
+## ExternalLoadControllerFile
+
+8. /include/model/DislocationDynamics/DislocationNetwork.h
+
+* line 67
+
+Change 
+
+#define ExternalLoadControllerFile "DummyExternalLoadController.h"
+
+To 
+
+#define ExternalLoadControllerFile "UniformExternalLoadController.h"
