@@ -48,7 +48,8 @@ DDObject::DDObject(const InputParameters & parameters)
     _T(getParam<Real>("T")),
     _Dv(_diffusivity * exp(- _Uvd * _eV2J / _kB / _T)),
     _burgers(getParam<Real>("burgers")),
-    _c0(exp(- _Uvf * _eV2J / _kB / _T))
+    _c0(exp(- _Uvf * _eV2J / _kB / _T)),
+    DN(argc,argv)
 {
 }
 
@@ -93,7 +94,8 @@ DDObject::execute()
     // Empty the velocity vector
     nodalClimbVelocity = {};
     
-    //DN().runSteps();
+    // Run the DDD code
+    DN.runSteps();
     
     std::cout << "The DDObject is executed!" << std::endl;
 }

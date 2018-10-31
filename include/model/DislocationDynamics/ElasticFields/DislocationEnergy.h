@@ -77,15 +77,17 @@ namespace model
         
 #elif _MODEL_NON_SINGULAR_DD_ == 1 /* Cai's non-singular theory */
         
-        //template <typename DislocationParticleType>
+        template <typename DislocationParticleType>
 //        static MatrixType compute(const DislocationParticleType& source,const DislocationParticleType& field)
-        //static MatrixType compute(const DislocationParticleType& ,const DislocationParticleType& )
-        /*{*//*!@param[in] source the DislocationParticle that is source of stress
+        static MatrixType compute(const DislocationParticleType& ,const DislocationParticleType& )
+        {/*!@param[in] source the DislocationParticle that is source of stress
           * @param[in] field  the DislocationParticle on which stress is computed
           *\returns the stress field produced by source on field
           */
             
-            //assert(0 && "FINISH IMPLEMENTATION HERE"); // \todo Finish implementation here
+            assert(0 && "FINISH IMPLEMENTATION HERE"); // \todo Finish implementation here
+
+            return MatrixType::Zero();
             
             //            MatrixType temp(MatrixType::Zero());
             //
@@ -100,7 +102,7 @@ namespace model
             //                     -(source.B.dot(field.B)*(1.0+coreLsquared/RaSquared)+ source.B.dot(DR)*field.B.dot(DR)*1.0/RaSquared )*field.T.dot(source.T)
             //                     )/sqrt(RaSquared);
             
-        //}
+        }
         
 #elif _MODEL_NON_SINGULAR_DD_ == 2 /* Lazar's non-singular theory */
         

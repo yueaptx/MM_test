@@ -1,0 +1,14 @@
+#########################################################################################
+#################### runID issue
+
+1. /include/model/DislocationDynamics/DislocationNetwork.h
+
+* line 807 & 812 (inside while (runID<Nsteps){})
+
+Add 
+
+unsigned int runID_loc = 0;
+
+&
+
+runID_loc ++;

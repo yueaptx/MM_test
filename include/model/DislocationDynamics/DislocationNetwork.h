@@ -62,10 +62,12 @@
 #include "EshelbyInclusion.h"
 #include "TextFileParser.h"
 
-
-#ifndef ExternalLoadControllerFile
-//#define ExternalLoadControllerFile "DummyExternalLoadController.h"
+// Select the external load controller (if nothing is defined DummyExternalLoadController.h is used)
 #define ExternalLoadControllerFile "UniformExternalLoadController.h"
+// Define the non-singluar method used for calculations
+#define _MODEL_NON_SINGULAR_DD_ 1 // 0 classical theory, 1 Cai's regularization method, 2 Lazar's regularization method
+#ifndef ExternalLoadControllerFile
+#define ExternalLoadControllerFile "DummyExternalLoadController.h"
 #endif
 #include ExternalLoadControllerFile
 
@@ -217,17 +219,17 @@ namespace model
             updatePlasticDistortionFromAreas();
             
             //! 3- Calculate BVP correction
-//            updateLoadControllers();
+            updateLoadControllers();
             
-//#ifdef DislocationNucleationFile
-//            if(use_bvp && !(runID%use_bvp))
-//            {
-//                nucleateDislocations(); // needs to be called before updateQuadraturePoints()
-//                updateQuadraturePoints();
-//            }
-//#endif
+#ifdef DislocationNucleationFile
+            if(use_bvp && !(runID%use_bvp))
+            {
+                nucleateDislocations(); // needs to be called before updateQuadraturePoints()
+                updateQuadraturePoints();
+            }
+#endif
             
-//            computeNodaVelocities();
+            computeNodaVelocities();
             
             
             //! 4- Solve the equation of motion
@@ -236,34 +238,34 @@ namespace model
             //! 5- Compute time step dt (based on max nodal velocity) and increment totalTime
             // make_dt();
             
-//            if(outputElasticEnergy)
-//            {
-//                typedef typename DislocationParticleType::ElasticEnergy ElasticEnergy;
-//                this->template computeNeighborField<ElasticEnergy>();
-//            }
+            if(outputElasticEnergy)
+            {
+                typedef typename DislocationParticleType::ElasticEnergy ElasticEnergy;
+                this->template computeNeighborField<ElasticEnergy>();
+            }
             
             //! 6- Output the current configuration before changing it
             //            output(runID);
-//            io().output(runID);
+            io().output(runID);
             
             
             //! 7- Moves DislocationNodes(s) to their new configuration using stored velocity and dt
-//            move(dt);
+            move(dt);
             
             //! 8- Update accumulated quantities (totalTime and plasticDistortion)
-//            totalTime+=dt;
-//            updatePlasticDistortionRateFromVelocities();
+            totalTime+=dt;
+            updatePlasticDistortionRateFromVelocities();
             
             
             //! 9- Contract segments of zero-length
             //            DislocationNetworkRemesh<DislocationNetworkType>(*this).contract0chordSegments();
             
             //! 10- Cross Slip (needs upated PK force)
-//            DislocationCrossSlip<DislocationNetworkType>(*this);
+            DislocationCrossSlip<DislocationNetworkType>(*this);
             
             
             //                        GrainBoundaryTransmission<DislocationNetworkType>(*this).transmit();
-//            GrainBoundaryTransmission<DislocationNetworkType>(*this).directTransmit();
+            GrainBoundaryTransmission<DislocationNetworkType>(*this).directTransmit();
             
             //
             //            GrainBoundaryDissociation<DislocationNetworkType>(*this).dissociate();
@@ -275,13 +277,13 @@ namespace model
             //            DislocationNetworkRemesh<DislocationNetworkType>(*this).loopInversion(dt);
             
             //! 12- Form Junctions
-//            DislocationJunctionFormation<DislocationNetworkType>(*this).formJunctions(maxJunctionIterations,DDtimeIntegrator<0>::dxMax);
+            DislocationJunctionFormation<DislocationNetworkType>(*this).formJunctions(maxJunctionIterations,DDtimeIntegrator<0>::dxMax);
             
             //            // Remesh may contract juncitons to zero lenght. Remove those juncitons:
             //            DislocationJunctionFormation<DislocationNetworkType>(*this).breakZeroLengthJunctions();
             
             //! 13- Node redistribution
-//            DislocationNetworkRemesh<DislocationNetworkType>(*this).remesh(runID);
+            DislocationNetworkRemesh<DislocationNetworkType>(*this).remesh(runID);
             
             //mergeLoopsAtNodes();
             
@@ -802,10 +804,12 @@ namespace model
         {/*! Runs Nsteps simulation steps
           */
             const auto t0= std::chrono::system_clock::now();
-            while (runID<Nsteps)
+            unsigned int runID_loc = 0;
+            while (runID_loc<Nsteps)
             {
                 model::cout<<std::endl; // leave a blank line
                 singleStep();
+                runID_loc ++;
             }
             updateQuadraturePoints(); // necessary if quadrature data are necessary in main
             model::cout<<greenBoldColor<<std::setprecision(3)<<std::scientific<<Nsteps<< " simulation steps completed in "<<(std::chrono::duration<double>(std::chrono::system_clock::now()-t0)).count()<<" [sec]"<<defaultColor<<std::endl;

@@ -25,14 +25,9 @@ public:
 	virtual void finalize(){}
 
 	const Real PI = std::acos(-1);
-
-    // Define the non-singluar method used for calculations
-#define _MODEL_NON_SINGULAR_DD_ 1 // 0 classical theory, 1 Cai's regularization method, 2 Lazar's regularization method
-    // Select the external load controller (if nothing is defined DummyExternalLoadController.h is used)
-#define ExternalLoadControllerFile "UniformExternalLoadController.h"
     
     // Create the network
-    model::DislocationNetwork<3,0,model::Hermite> DN();
+    //model::DislocationNetwork<3,0,model::Hermite> DN;
     // Create the loops
     std::vector<size_t> loop0;
     // Returns a reference to the network
@@ -42,6 +37,14 @@ public:
 
     std::vector<Number> getNodalClimbVelocity() const {return nodalClimbVelocity;}
 
+    /* argc & argv*/
+    int argc = 1;
+    char a = '.';
+    char b = '-';
+    char c = 'D';
+    std::vector<char *> argVec = {&a};
+    char ** argv = &argVec[0];
+    
 protected:
     // Pointer to the EquationSystem object
     System * _sys;
@@ -65,6 +68,7 @@ protected:
     Real _Dv;
     const Real _burgers;
     Real _c0; // equilibrium concentation in defect-free crystal
+    model::DislocationNetwork<3,0,model::Hermite> DN;
 };
 
 

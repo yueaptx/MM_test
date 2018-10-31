@@ -673,7 +673,7 @@ namespace model
                 SequentialOutputFile<'G',1>::set_count(runID); // GlidePlanes_file;
                 SequentialOutputFile<'G',1>::set_increment(DN.outputFrequency); // GlidePlanes_file;
                 SequentialOutputFile<'G',1> glide_file;
-                glide_file << *dynamic_cast<const GlidePlaneObserverType*>(&DN);
+//                glide_file << *dynamic_cast<const GlidePlaneObserverType*>(&DN);
                 model::cout<<", G/G_"<<glide_file.sID<<std::flush;
             }
             
@@ -809,7 +809,7 @@ namespace model
                 model::SequentialOutputFile<'U',1>::set_increment(DN.outputFrequency); // Vertices_file;
                 model::SequentialOutputFile<'U',true> u_file;
                 model::cout<<"		writing to U/U_"<<u_file.sID<<".txt"<<std::flush;
-                u_file<<DN.bvpSolver.displacement().onBoundary();
+//                u_file<<DN.bvpSolver.displacement().onBoundary();
                 model::cout<<magentaColor<<" ["<<(std::chrono::duration<double>(std::chrono::system_clock::now()-t0)).count()<<" sec]"<<defaultColor<<std::endl;
                 
                 const auto t1=std::chrono::system_clock::now();
@@ -817,7 +817,7 @@ namespace model
                 model::SequentialOutputFile<'S',1>::set_increment(DN.outputFrequency); // Vertices_file;
                 model::SequentialOutputFile<'S',true> s_file;
                 model::cout<<"		writing to S/S_"<<s_file.sID<<".txt"<<std::flush;
-                s_file<<DN.bvpSolver.stress().onBoundary();
+//                s_file<<DN.bvpSolver.stress().onBoundary();
                 model::cout<<magentaColor<<" ["<<(std::chrono::duration<double>(std::chrono::system_clock::now()-t1)).count()<<" sec]"<<defaultColor<<std::endl;
             }
             
@@ -828,7 +828,7 @@ namespace model
                 model::SequentialOutputFile<'Q',true> q_file;
                 for (const auto& particle : DN.particles())
                 {
-                    q_file<<particle<<"\n";
+//                    q_file<<particle<<"\n";
                 }
                 
             }
@@ -839,7 +839,7 @@ namespace model
                 model::SequentialOutputFile<'Z',1>::set_count(runID);                   // Vertices_file;
                 model::SequentialOutputFile<'Z',1>::set_increment(DN.outputFrequency);  // Vertices_file;
                 model::SequentialOutputFile<'Z',true> z_file;
-                z_file<<LN;
+//                z_file<<LN;
                 
             }
             

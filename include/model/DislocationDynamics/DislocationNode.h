@@ -359,9 +359,9 @@ namespace model
                 }
             }
             
-                                assert(false && "snapToBoundingBox FAILED.");
+            assert(false && "snapToBoundingBox FAILED.");
 
-            
+            return VectorDim::Zero();
 //
 //            
 //            const VectorDim pL=std::get<0>(boundingBoxSegments().snap(P));
@@ -1371,7 +1371,7 @@ namespace model
                         {
                             model::cout<<"DislocationNode "<<this->sID<<", @"<<std::setprecision(15)<<std::scientific<<this->get_P().transpose()<<std::endl;
                             model::cout<<"BoundingBox Lines:"<<std::endl;
-                            model::cout<<boundingBoxSegments();
+                            //model::cout<<boundingBoxSegments();
                             //                            for (const auto& pair : boundingBoxSegments())
                             //                            {
                             //                                model::cout<<std::setprecision(15)<<std::scientific<<"("<<pair.first.transpose()<<"), ("<<pair.second.transpose()<<std::endl;

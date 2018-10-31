@@ -139,6 +139,44 @@ Eigen::aligned_allocator<std::pair<double const,VectorDim>>> snapMap;
 
 
 ###################################################################
+## With Mac OS, the following error shows up:
+
+use of overloaded operator '<<' is ambiguous (with operand types 'model::MPIcout' and 'BoundingLineSegments<dim>')
+
+7.0 /include/model/DislocationDynamics/DislocationNode.h
+
+* line 1374
+
+Comment out "model::cout<<boundingBoxSegments();"
+
+7.1 /include/model/DislocationDynamics/IO/DislocationNetworkIO.h
+
+* line 676 & 812 & 820 & 831 & 842
+
+Comment out
+
+glide_file << *dynamic_cast<const GlidePlaneObserverType*>(&DN);
+
+&
+
+u_file<<DN.bvpSolver.displacement().onBoundary();
+
+&
+
+s_file<<DN.bvpSolver.stress().onBoundary();
+
+&
+
+q_file<<particle<<"\n";
+
+&
+
+z_file<<LN;
+
+
+
+
+###################################################################
 ## ExternalLoadControllerFile
 
 8. /include/model/DislocationDynamics/DislocationNetwork.h
@@ -152,3 +190,62 @@ Change
 To 
 
 #define ExternalLoadControllerFile "UniformExternalLoadController.h"
+
+
+###################################################################
+## error: control reaches end of non-void function In member function <snapToBoundingBox> in <DislocationNode.h>
+
+9. /include/model/DislocationDynamics/DislocationNode.h
+
+* line 364
+
+Add
+
+return VectorDim::Zero();
+
+
+###################################################################
+## error: inputFiles/DD.txt does not contain line with format:
+
+10. /inputFiles/DD.txt
+
+* line 35 & 41
+
+Add
+
+outputPKforce=0;
+
+outputQuadradtureParticles=0;
+
+
+###################################################################
+## error: no return statement in function returning non-void
+
+11. /include/model/DislocationDynamics/ElasticFields/DislocationEnergy.h
+
+* line 90
+
+Add
+
+return MatrixType::Zero();
+
+
+###################################################################
+## set the externalloadcontrollerfile and MODEL_NON_SINGULAR_DD_
+
+* line 66 & 68
+
+Add
+
+#define ExternalLoadControllerFile "UniformExternalLoadController.h"
+
+&
+
+#define _MODEL_NON_SINGULAR_DD_ 1 // 0 classical theory, 1 Cai's regularization method, 2 Lazar's regularization method
+
+
+
+
+
+
+
