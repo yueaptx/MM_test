@@ -30,17 +30,17 @@
 #  elem_type = HEX8
 
   type = FileMesh
-  file = './mesh/block.msh'
+  file = './mesh/block_structured1.msh'
   # The MultiAppInterpolationTransfer object only works with ReplicatedMesh
   parallel_type = replicated
   #second_order = true
 []
 
 [AuxVariables]
-#  [./c_fromMaster]
-#    family = LAGRANGE
-#    order = FIRST
-#  [../]
+  [./c_fromMaster]
+    family = LAGRANGE
+    order = FIRST
+  [../]
   [./stress_xx_from]
   [../]
   [./stress_xy_from]

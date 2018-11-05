@@ -21,7 +21,7 @@
 #  nz = 8
 #  elem_type = HEX8
   type = FileMesh
-  file = './mesh/block.msh'
+  file = './mesh/block_structured1.msh'
   # The MultiAppInterpolationTransfer object only works with ReplicatedMesh
   parallel_type = replicated
   displacements = 'disp_x disp_y disp_z'
