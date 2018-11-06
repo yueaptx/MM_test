@@ -52,6 +52,15 @@ DDObject::DDObject(const InputParameters & parameters)
     _burgers(getParam<Real>("burgers")),
     _c0(exp(- _Uvf * _eV2J / _kB / _T))
 {
+    //std::cout << "DDobject has been initialized!" << _DN.mooseValues.use_MOOSE << std::endl;
+    //_DN.mooseValues.setDDobject(this);
+    _stressCompNames.erase(_stressCompNames.begin());     // remove the first element which is "c_master"
+    for (const auto & _stressCompName : _stressCompNames)
+    {
+        _sys_sig.push_back(&_fe_problem.getSystem(_stressCompName));
+        _var_sig.push_back(&_fe_problem.getStandardVariable(0, _stressCompName));
+    }
+    _DN.mooseValues.setDDobject(_sys_sig, _var_sig);
 }
 
 
@@ -64,12 +73,7 @@ DDObject::initialSetup()
     loopNodes = {};
     loop0 = {};
     
-    _stressCompNames.erase(_stressCompNames.begin());     // remove the first element which is "c_master"
-    for (const auto & _stressCompName : _stressCompNames)
-    {
-        _sys_sig.push_back(&_fe_problem.getSystem(_stressCompName));
-        _var_sig.push_back(&_fe_problem.getStandardVariable(0, _stressCompName));
-    }
+    
 }
 
 void
@@ -87,7 +91,7 @@ DDObject::execute()
     // Run the DDD code
     _DN.runSteps();
     
-    Eigen::Matrix<double, _dim, 1> p1 = {0,0,0};
+    pointVector p1 = {0,0,0};
     Point p2(p1(0,0), p1(1,0), p1(2,0));
     
     /*
@@ -110,7 +114,7 @@ DDObject::execute()
     Number c_field = _sys_c->point_value(_var_c->number(), p2, false);
     std::cout << "The concentration at Point " << p2 << " is " << c_field << std::endl;
     
-    Eigen::Matrix<double, _dim, _dim> stress_MOOSE;
+    stressMatrix stress_MOOSE;
     std::cout << "The stress tensor from MOOSE at " << p2 << "is : unit[Pa]" << std::endl;
     for (int i = 0; i < _dim; i++)
     {
@@ -121,7 +125,6 @@ DDObject::execute()
         }
         std::cout << std::endl;
     }
-    
     
     std::cout << "The DDObject is executed!" << std::endl;
 }

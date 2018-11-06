@@ -12,3 +12,63 @@ unsigned int runID_loc = 0;
 &
 
 runID_loc ++;
+
+
+#########################################################################################
+#################### use_MOOSE stress
+
+1. /inputFiles/DD.txt
+
+* line 98
+
+Add
+
+# Enable/disable the image correction from the MOOSE solution.
+use_MOOSE = 1; 
+
+
+
+2. /include/model/DislocationDynamics/DislocationNetwork.h
+
+* line 60
+
+Add 
+
+#include "MOOSEvalues.h"
+
+* line 88 
+
+Add 
+
+MOOSEvalues<dim> mooseValues;
+
+* line 324
+
+Add
+
+unsigned int use_MOOSE;
+
+
+* line 373
+
+Add
+
+/* init */ use_MOOSE(TextFileParser("inputFiles/DD.txt").readScalar<int>("use_MOOSE",true)),
+
+
+
+3. /include/model/DislocationDynamics/DislocationQuadraturePoint.h
+
+* line 318
+
+Add
+
+if(seg.network().use_MOOSE)
+{
+
+}
+
+4. Add /include/model/Test/MOOSEvalues.h
+
+
+

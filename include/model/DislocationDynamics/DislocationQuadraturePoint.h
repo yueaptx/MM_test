@@ -313,6 +313,15 @@ namespace model
                     {
                         qPoint.stress += seg.network().bvpSolver.stress(qPoint.r,seg.source->includingSimplex());
                     }
+
+                    // Add MOOSE stress
+                    if(seg.network().use_MOOSE)
+                    {
+                        Eigen::Matrix<double, 3, 1> p1 = {0,0,0};
+                        Point p2(p1(0,0), p1(1,0), p1(2,0));
+                        Point p3(qPoint.r(0,0)*0.2722e-9, qPoint.r(1,0)*0.2722e-9, qPoint.r(2,0)*0.2722e-9);
+                        qPoint.stress += seg.network().mooseValues.stress(p3);
+                    }
                     
                     // Add GB stress
                     for(const auto& sStraight : seg.network().poly.grainBoundaryDislocations() )

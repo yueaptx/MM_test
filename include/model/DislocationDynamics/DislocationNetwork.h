@@ -57,6 +57,7 @@
 #include "GrainBoundaryTransmission.h"
 //#include <model/DislocationDynamics/Polycrystals/GrainBoundaryDissociation.h>
 #include "BVPsolver.h"
+#include "MOOSEvalues.h"
 #include "Polycrystal.h"
 #include "DislocationNodeContraction.h"
 #include "EshelbyInclusion.h"
@@ -84,6 +85,7 @@ namespace model
         SimplicialMesh<dim> mesh;
         Polycrystal<dim> poly;
         BVPsolver<dim,2> bvpSolver;
+        MOOSEvalues<dim> mooseValues;
         
         DislocationNetworkBase() :
         /* init */ mesh(TextFileParser("inputFiles/DD.txt").readScalar<int>("meshID",true)),
@@ -321,6 +323,7 @@ namespace model
         int crossSlipModel;
         bool use_boundary;
         unsigned int use_bvp;
+        unsigned int use_MOOSE;
         bool use_virtualSegments;
         bool use_externalStress;
         bool use_extraStraightSegments;
@@ -369,6 +372,7 @@ namespace model
         /* init */ crossSlipModel(TextFileParser("inputFiles/DD.txt").readScalar<int>("crossSlipModel",true)),
         /* init */ use_boundary(true),
         /* init */ use_bvp(TextFileParser("inputFiles/DD.txt").readScalar<int>("use_bvp",true)),
+        /* init */ use_MOOSE(TextFileParser("inputFiles/DD.txt").readScalar<int>("use_MOOSE",true)),
         /* init */ use_virtualSegments(TextFileParser("inputFiles/DD.txt").readScalar<int>("use_virtualSegments",true)),
         /* init */ use_externalStress(false),
         /* init */ use_extraStraightSegments(false),
